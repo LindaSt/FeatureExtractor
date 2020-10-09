@@ -13,3 +13,6 @@ for given images.
    Default False. Set if the specified imgs_path contains multiple folders with images, that should all be processed.
 - `img_type`:
    Default is "png". Image type to look for.
+
+
+To install the necessarity packages just run `conda env create -f environment.yml`.
