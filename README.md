@@ -17,3 +17,5 @@ for given images.
 
 Tensor transformations have to be specified in the `__init()__` function of the `FeatureExtractor` class. The transforms
 are also saved into a text file in the specified output folder.
+
+To install the necessary packages just run `conda env create -f environment.yml`.
