@@ -13,3 +13,7 @@ for given images.
    Default False. Set if the specified imgs_path contains multiple folders with images, that should all be processed.
 - `img_type`:
    Default is "png". Image type to look for.
+- `overwrite`: Default is False. If set to True, existing files will be overwritten.
+
+Tensor transformations have to be specified in the `__init()__` function of the `FeatureExtractor` class. The transforms
+are also saved into a text file in the specified output folder.

@@ -94,7 +94,6 @@ class _Bottleneck(nn.Module):
 
 
 class ResNet(nn.Module):
-
     expected_input_size = 224
 
     def __init__(self, block, layers):
@@ -173,6 +172,8 @@ def resnet18(pretrained=False, **kwargs):
         except Exception as exp:
             logging.warning(exp)
     return model
+
+
 resnet18.expected_input_size = ResNet.expected_input_size
 
 
@@ -189,6 +190,8 @@ def resnet34(pretrained=False, **kwargs):
         except Exception as exp:
             logging.warning(exp)
     return model
+
+
 resnet34.expected_input_size = ResNet.expected_input_size
 
 
@@ -205,6 +208,8 @@ def resnet50(pretrained=False, **kwargs):
         except Exception as exp:
             logging.warning(exp)
     return model
+
+
 resnet50.expected_input_size = ResNet.expected_input_size
 
 
@@ -221,6 +226,8 @@ def resnet101(pretrained=False, **kwargs):
         except Exception as exp:
             logging.warning(exp)
     return model
+
+
 resnet101.expected_input_size = ResNet.expected_input_size
 
 
@@ -237,5 +244,6 @@ def resnet152(pretrained=False, **kwargs):
         except Exception as exp:
             logging.warning(exp)
     return model
-resnet152.expected_input_size = ResNet.expected_input_size
 
+
+resnet152.expected_input_size = ResNet.expected_input_size

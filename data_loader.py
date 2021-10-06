@@ -30,6 +30,15 @@ class ImageDataset(Dataset):
         self.img_type = img_type
         self.file_identifier = file_identifier
 
+        # self.pre_process = transforms.Compose([transforms.Resize(self.expected_input_size),
+        #                                   transforms.ToTensor(),
+        #                                   transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
+
+        self.pre_process = transforms.Compose([transforms.CenterCrop(self.expected_input_size),
+                                               transforms.ToTensor(),
+                                               transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                                                    std=[0.229, 0.224, 0.225])])
+
     @property
     def file_list(self):
         return [os.path.basename(f) for f in
@@ -42,11 +51,8 @@ class ImageDataset(Dataset):
         img_name = self.file_list[idx]
         image = pil_loader(os.path.join(self.root_dir, img_name))
         # resize images to expected input size (depends on model) and normalize according to ImageNet normalization
-        pre_process = transforms.Compose([transforms.Resize(self.expected_input_size),
-                                          transforms.ToTensor(),
-                                          transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
 
         # make a tensor out of the image and normalize according to ImageNet dataset
-        image = pre_process(image)
+        image = self.pre_process(image)
 
         return image, img_name
