@@ -18,7 +18,8 @@ from torchvision import transforms
 class ImageDataset(Dataset):
     """Face Landmarks dataset."""
 
-    def __init__(self, root_dir, expected_input_size, img_type='png', file_identifier=''):
+    def __init__(self, root_dir: str, expected_input_size: int, img_type: str = 'png',
+                 file_identifier: str = '', crop: int = None):
         """
         Args:
             root_dir (string): Directory with all the images.
@@ -30,14 +31,18 @@ class ImageDataset(Dataset):
         self.img_type = img_type
         self.file_identifier = file_identifier
 
-        # self.pre_process = transforms.Compose([transforms.Resize(self.expected_input_size),
-        #                                   transforms.ToTensor(),
-        #                                   transforms.Normalize(mean=[0.485, 0.456, 0.406], std=[0.229, 0.224, 0.225])])
+        if crop is None:
+            self.pre_process = transforms.Compose([transforms.Resize(self.expected_input_size),
+                                              transforms.ToTensor(),
+                                              transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                                                   std=[0.229, 0.224, 0.225])])
 
-        self.pre_process = transforms.Compose([transforms.CenterCrop(self.expected_input_size),
-                                               transforms.ToTensor(),
-                                               transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                                                    std=[0.229, 0.224, 0.225])])
+        else:
+            self.pre_process = transforms.Compose([transforms.CenterCrop(crop),
+                                                   transforms.Resize(self.expected_input_size),
+                                                   transforms.ToTensor(),
+                                                   transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                                                        std=[0.229, 0.224, 0.225])])
 
     @property
     def file_list(self):
