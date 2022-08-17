@@ -18,6 +18,8 @@ def get_pixel_feature_vec(file_to_process, size, img_type):
                         (img_height + size) // 2))
         val[os.path.basename(file).split(f'.{img_type}')[0]] = np.array(img).flatten()
     df = pd.DataFrame.from_dict(val, orient='index', columns=[f'pixel_val_{i}' for i in range(size**2*3)])
+    # TODO: fix this so that patch order is right and the same way as for the imagenet features
+    # TODO: normalize pixel values to range [0,1]?
     return df
 
 

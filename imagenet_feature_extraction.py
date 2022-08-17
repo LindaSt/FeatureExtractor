@@ -10,7 +10,7 @@ from torch.utils.data import DataLoader
 from data_loader import ImageDataset
 import encoder_models.ResNet as resnet
 import encoder_models.VGG as vgg
-
+import encoder_models.DINO as dino
 
 class FeatureExtractor:
     """
@@ -28,7 +28,7 @@ class FeatureExtractor:
     @property
     def model(self):
         # classifier is removed in the forward pass (see file in encoder_models)
-        model_category = re.match('\D*', self.model_name).group(0)
+        model_category = re.match('^[^_\d]*', self.model_name).group(0)
         model_fct = eval(f'{model_category}.{self.model_name}')
         model = model_fct(pretrained=True)
 
@@ -82,7 +82,7 @@ def extract_imagenet_features(imgs_folder: str, output_path: str, model: str, mu
     """
 
     if not os.path.isdir(output_path):
-        os.mkdir(output_path)
+        os.makedirs(output_path, exist_ok=True)
 
     if not multifolder:
         subfolders = [imgs_folder]

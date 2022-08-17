@@ -232,7 +232,7 @@ resnet101.expected_input_size = ResNet.expected_input_size
 
 
 def resnet152(pretrained=False, **kwargs):
-    """Constructs a _ResNet-152 model.
+    """Constructs a ResNet-152 model.
 
     Args:
         pretrained (bool): If True, returns a model pre-trained on ImageNet
