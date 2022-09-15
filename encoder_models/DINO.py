@@ -7,7 +7,7 @@ from torch import nn
 
 def dino_vits16(**kwargs):
     vits16 = DinoFeature()
-    vits16.expected_input_size = 16
+    vits16.expected_input_size = None
     return vits16
 
 
