@@ -14,12 +14,14 @@ import torch
 from torchvision.datasets.folder import pil_loader
 from torchvision import transforms
 
+from misc import MyGammaSquare
+
 
 class ImageDataset(Dataset):
-    """Face Landmarks dataset."""
 
     def __init__(self, root_dir: str, expected_input_size: int, img_type: str = 'png',
-                 file_identifier: str = '', crop: int = None):
+                 file_identifier: str = '', normalize: bool = False, crop: int = None,
+                 focus_on_centre: bool = False):
         """
         Args:
             root_dir (string): Directory with all the images.
@@ -30,30 +32,34 @@ class ImageDataset(Dataset):
         self.expected_input_size = expected_input_size
         self.img_type = img_type
         self.file_identifier = file_identifier
+        self.crop = crop
+        self.normalize = normalize
+        self.focus_on_centre = focus_on_centre
 
-        if crop is None:
-            self.pre_process = transforms.Compose([transforms.Resize(self.expected_input_size),
-                                              transforms.ToTensor(),
-                                              transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                                                   std=[0.229, 0.224, 0.225])])
+    @property
+    def pre_process(self):
+        pre_process = []
+        if self.crop is not None:
+            pre_process.append(transforms.CenterCrop(self.crop))
 
-        elif self.expected_input_size is None:
-            self.pre_process = transforms.Compose([transforms.CenterCrop(crop),
-                                                   transforms.ToTensor(),
-                                                   transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                                                        std=[0.229, 0.224, 0.225])])
+        if self.expected_input_size is not None:
+            pre_process.append(transforms.Resize(self.expected_input_size))
 
-        else:
-            self.pre_process = transforms.Compose([transforms.CenterCrop(crop),
-                                                   transforms.Resize(self.expected_input_size),
-                                                   transforms.ToTensor(),
-                                                   transforms.Normalize(mean=[0.485, 0.456, 0.406],
-                                                                        std=[0.229, 0.224, 0.225])])
+        if self.focus_on_centre: # intensify centre, make border lighter
+            pre_process.append(MyGammaSquare(0.5, 1.5, 1))
+
+        pre_process.append(transforms.ToTensor())
+
+        if self.normalize:  # ImageNet normalization factors
+            pre_process.append(transforms.Normalize(mean=[0.485, 0.456, 0.406],
+                                                    std=[0.229, 0.224, 0.225]))
+
+        return transforms.Compose(pre_process)
 
     @property
     def file_list(self):
-        return [os.path.basename(f) for f in
-                glob.glob(os.path.join(self.root_dir, f'*{self.file_identifier}*.{self.img_type}'))]
+        return sorted([os.path.basename(f) for f in
+                glob.glob(os.path.join(self.root_dir, f'*{self.file_identifier}*.{self.img_type}'))])
 
     def __len__(self):
         return len(self.file_list)
